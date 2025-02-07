@@ -5,8 +5,8 @@
 #include <vector>
 
 struct ClubConfig {
-    int openTime;
-    int closeTime;
+    int openTime; // in minutes
+    int closeTime; // in minutes
     int numTables;
     int hourlyCost;
 };
