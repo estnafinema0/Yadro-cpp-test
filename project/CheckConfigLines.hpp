@@ -4,6 +4,7 @@
 // Here are functions to check config lines: line 1, 2, 3 from file
 
 #include <string>
+#include <vector>
 
 #include "Parser.hpp"
 #include "HelpFuncs.hpp"
@@ -95,7 +96,9 @@ bool checkEventLine(const std::string &line, EventData &event, std::string &erro
     }
 
     event.eventId = eventId;
-    int expectedParams = (eventId == 2) ? 2 : 1;
+    
+    // int expectedParams = (eventId == 2) ? 2 : 1;
+    std::vector<std::string>::size_type expectedParams = (eventId == 2) ? 2 : 1;
     if (tokens.size() != 2 + expectedParams) {
         errorLine = line;
         return false;

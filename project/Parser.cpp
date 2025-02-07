@@ -1,4 +1,5 @@
 #include "Parser.hpp"
+#include "Time.hpp"
 #include "CheckConfigLines.hpp"
 
 bool FileParser::readLines(const std::string &filename, std::string &errorLine) {
