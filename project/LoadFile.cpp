@@ -53,5 +53,6 @@ bool FileParser::Start(ClubConfig &config, std::vector<EventData> &events, std::
             return false;
         events.push_back(event);
     }
+    
     return true;
 }
