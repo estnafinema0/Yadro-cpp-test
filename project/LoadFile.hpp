@@ -20,12 +20,11 @@ struct EventData {
 
 
 class FileParser {
+public:
+    explicit FileParser(const std::string &filename);
+    bool Start(ClubConfig &config, std::vector<EventData> &events, std::string & errorLine);
 private:
     std::vector<std::string> lines;
-
-public:
-    FileParser(const std::string &filename);
     bool readLines(const std::string &filename, std::string &errorLine);
 };
-
 #endif
