@@ -9,8 +9,8 @@
 #include "HelpFuncs.hpp"
 #include "Time.hpp"
 
+// Check if line is valid table count line and save it to config
 bool checkTableCount(const std::string &line, ClubConfig &config, std::string &errorLine) {
-    // Check if line is valid table count line and save it to config
     auto tokens = mysplit(line);
     if (tokens.size() != 1) {
         errorLine = line;
@@ -27,8 +27,8 @@ bool checkTableCount(const std::string &line, ClubConfig &config, std::string &e
     return true;
 }
 
+// Check if line is valid operating hours line and save it to config
 bool checkOperatingHours(const std::string &line, ClubConfig &config, std::string &errorLine) {
-    // Check if line is valid operating hours line and save it to config
     auto tokens = mysplit(line);
     if (tokens.size() != 2) {
         errorLine = line;
@@ -52,8 +52,8 @@ bool checkOperatingHours(const std::string &line, ClubConfig &config, std::strin
     return true;
 }
 
+// Check if line is valid hourly cost line and save it to config
 bool checkHourlyCost(const std::string &line, ClubConfig &config, std::string &errorLine) {
-    // Check if line is valid hourly cost line and save it to config
     auto tokens = mysplit(line);
     if (tokens.size() != 1) {
         errorLine = line;
@@ -70,8 +70,8 @@ bool checkHourlyCost(const std::string &line, ClubConfig &config, std::string &e
     return true;
 }
 
+// Check if line is valid event line and save it to event
 bool checkEventLine(const std::string &line, EventData &event, std::string &errorLine) {
-    // Check if line is valid event line and save it to event
     auto tokens = mysplit(line);
     if (tokens.size() < 2) {
         errorLine = line;
