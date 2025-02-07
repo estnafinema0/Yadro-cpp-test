@@ -19,12 +19,12 @@ struct EventData {
 };
 
 
-class Parser {
+class FileParser {
 private:
     std::vector<std::string> lines;
 
 public:
-    Parser(const std::string &filename);
+    FileParser(const std::string &filename);
 };
 
 #endif
