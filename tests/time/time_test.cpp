@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../Yadro/Time.hpp"
+#include "../../project/Time.hpp"
 
 TEST(ParseTimeTest, ValidTimes_LowestBoundary) {
     bool success = false;
