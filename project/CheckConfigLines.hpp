@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "LoadFile.hpp"
+#include "Parser.hpp"
 #include "HelpFuncs.hpp"
 #include "Time.hpp"
 

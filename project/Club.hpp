@@ -1,7 +1,7 @@
 #ifndef CLUB_HPP
 #define CLUB_HPP
 
-#include "LoadFile.hpp"
+#include "Parser.hpp"
 
 struct Table {
     int number;                 
