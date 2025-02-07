@@ -10,4 +10,4 @@ public:
     static std::string ToString(int minutes);
 };
 
-#endif // TIME_HPP
+#endif
