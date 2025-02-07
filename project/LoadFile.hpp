@@ -1,5 +1,5 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#ifndef LOADFILE_HPP
+#define LOADFILE_HPP
 
 #include <string>
 #include <vector>
@@ -25,6 +25,7 @@ private:
 
 public:
     FileParser(const std::string &filename);
+    bool readLines(const std::string &filename, std::string &errorLine);
 };
 
 #endif
