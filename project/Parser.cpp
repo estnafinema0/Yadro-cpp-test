@@ -1,6 +1,5 @@
-#include "LoadFile.hpp"
+#include "Parser.hpp"
 #include "CheckConfigLines.hpp"
-#include "LoadFile.hpp"
 
 bool FileParser::readLines(const std::string &filename, std::string &errorLine) {
     FILE *file = std::fopen(filename.c_str(), "r");
