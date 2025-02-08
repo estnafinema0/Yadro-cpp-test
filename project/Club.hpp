@@ -46,7 +46,7 @@ private:
 
     void addOutputEvent(const std::string& event);
 
-    int computeRevenue(int minutes) const;
+    int computeClientRevenue(int minutes) const;
 };
 
 #endif

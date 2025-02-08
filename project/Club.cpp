@@ -16,3 +16,11 @@ std::string Club::getCloseTimeStr() const{
     return Time::ToString(closeTime);
 }
 
+void Club::addOutputEvent(const std::string& event){
+    outputEvents.push_back(event);
+}
+
+int Club::computeClientRevenue(int minutes) const{
+    return (minutes + 59) / 60 * hourlyCost;
+}
+
