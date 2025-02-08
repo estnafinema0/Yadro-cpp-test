@@ -152,3 +152,19 @@ void Club::freeTable(int tableIndex, int eventTime){
 const std::vector<std::string>& Club::getOutput() const {
     return outputEvents;
 }
+
+void Club::assignTableToWaiting(int tableIndex, int eventTime) {
+    if (waitingQueue.empty())
+        return;
+    std::string client = waitingQueue.front();
+    waitingQueue.erase(waitingQueue.begin());
+
+    tables[tableIndex].occupied = true;
+    tables[tableIndex].currentClient = client;
+    tables[tableIndex].startTime = eventTime;
+    seatedClients[client] = tables[tableIndex].number;
+    // Generate event ID 12.
+    std::ostringstream oss;
+    oss << Time::ToString(eventTime) << " 12 " << client << " " << tables[tableIndex].number;
+    addOutputEvent(oss.str());
+}
