@@ -298,7 +298,7 @@ TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType1_TooMany) {
     removeTempFile();
 }
 
-// 20. Event: wrong token count for event ID 2 (too few).
+// 20. Event: wrong token count for event ID 2 (no table number).
 TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType2_TooFew) {
     std::string content = validConfig + "09:00 2 client";
     ASSERT_TRUE(writeToFile(tempFileName, content));
@@ -325,6 +325,36 @@ TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType2_TooMany) {
     EXPECT_EQ(errorLine, "09:00 2 client 1 extra");
     removeTempFile();
 }
+
+// 22. Event: wrong table number.
+TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType2_WrongTableNumber) {
+    std::string content = validConfig + "09:00 2 client not_a_number";
+    ASSERT_TRUE(writeToFile(tempFileName, content));
+
+     FileParser parser(tempFileName);
+    ClubConfig config;
+    std::vector<EventData> events;
+    std::string errorLine;
+    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_EQ(errorLine, "09:00 2 client not_a_number");
+    removeTempFile();
+}
+
+
+// 23. Event: table number is out of range.
+TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType2_OutOfRange) {
+    std::string content = validConfig + "09:00 2 client 99999";
+    ASSERT_TRUE(writeToFile(tempFileName, content));
+
+     FileParser parser(tempFileName);
+    ClubConfig config;
+    std::vector<EventData> events;
+    std::string errorLine;
+    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_EQ(errorLine, "09:00 2 client 99999");
+    removeTempFile();
+}
+
 
 // *************************
 // Test for valid file content
