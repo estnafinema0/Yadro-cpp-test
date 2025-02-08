@@ -29,9 +29,8 @@ public:
     const std::vector<std::string>& getOutput() const;
     // Generates and returns a final report on tables.
     std::vector<std::string> getReport() const;
-    // Returns the opening time in the format "HH:MM".
+
     std::string getOpenTimeStr() const;
-    // Returns the closing time in the format "HH:MM".
     std::string getCloseTimeStr() const;
 private:
     int tablesCount;
@@ -52,7 +51,6 @@ private:
     int computeClientRevenue(int minutes) const;
 
     void freeTable(int tableIndex, int eventTime);
-
 
     void processEventID1(int time, const std::string& client);
     void processEventID2(int time, const std::string& client, const int tableNumber);

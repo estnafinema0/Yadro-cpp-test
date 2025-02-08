@@ -133,3 +133,22 @@ void Club::processEventID4(int time, const std::string& client){
     currentClients.erase(clientName);
 }
 
+void Club::freeTable(int tableIndex, int eventTime){
+    if (tables[tableIndex].occupied) {
+        int duration = eventTime - tables[tableIndex].startTime;
+        if (duration < 0) duration = 0;
+        tables[tableIndex].totalOccupied += duration;
+        int hours = computeClientRevenue(duration);
+        tables[tableIndex].revenue += hours * hourlyCost;
+        std::string client = tables[tableIndex].currentClient;
+        tables[tableIndex].occupied = false;
+        tables[tableIndex].currentClient = "";
+        seatedClients.erase(client);    
+
+        assignTableToWaiting(tableIndex, eventTime);
+    }
+}
+
+const std::vector<std::string>& Club::getOutput() const {
+    return outputEvents;
+}
