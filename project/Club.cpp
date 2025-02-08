@@ -191,3 +191,14 @@ void Club::endOfDay() {
         addOutputEvent(oss.str());
     }
 }
+
+std::vector<std::string> Club::getReport() const {
+    std::vector<std::string> report;
+    for (const auto &table: tables) {
+        std::string occTime = Time::ToString(table.totalOccupied);
+        std::ostringstream oss;
+        oss << table.number << " " << table.revenue << " " << occTime;
+        report.push_back(oss.str());
+    }
+    return report;
+}
