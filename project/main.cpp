@@ -41,6 +41,9 @@ int main(int argc, char* argv[]) {
         output.push_back(line);
     }
 
+    for (const auto &line : output) {
+        std::cout << line << std::endl;
+    }
     
     return 0;
 }
