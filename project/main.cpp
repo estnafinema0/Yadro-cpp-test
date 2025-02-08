@@ -19,5 +19,15 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
+    Club club(config.numTables, config.openTime, config.closeTime, config.hourlyCost);
+
+    std::vector<std::string> output;
+    output.push_back(club.getOpenTimeStr());
+    for (const auto &event : events) {
+        club.processEvent(event);
+    }
+    
+    club.endOfDay();
+
     return 0;
 }
