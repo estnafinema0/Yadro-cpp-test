@@ -35,6 +35,12 @@ int main(int argc, char* argv[]) {
     }
     output.push_back(club.getCloseTimeStr());
 
+    // Making the final report about the revenue.
+    std::vector<std::string> report = club.getReport();
+    for (const auto &line : report) {
+        output.push_back(line);
+    }
+
     
     return 0;
 }
