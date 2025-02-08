@@ -72,7 +72,7 @@ bool checkHourlyCost(const std::string &line, ClubConfig &config, std::string &e
 }
 
 // Check if line is valid event line and save it to event
-bool checkEventLine(const std::string &line, EventData &event, std::string &errorLine) {
+bool checkEventLine(const std::string &line, EventData &event, ClubConfig &config, std::string &errorLine) {
     auto tokens = mysplit(line);
     if (tokens.size() < 2) {
         errorLine = line;
@@ -104,10 +104,19 @@ bool checkEventLine(const std::string &line, EventData &event, std::string &erro
         return false;
     }
     event.originalLine = line;
-    event.params.clear();
-    for (size_t i = 2; i < tokens.size(); i++) {
-        event.params.push_back(tokens[i]);
+    event.TableNumber = -1;
+    event.ClientName = tokens[2];
+    if (eventId == 2) {
+        if (!IntFromString(tokens[3], event.TableNumber)) {
+            errorLine = line;
+            return false;
+        }
+        if (event.TableNumber < 1 || event.TableNumber > config.numTables) {
+            errorLine = line;
+            return false;
+        }
     }
+
     return true;
 }
 
