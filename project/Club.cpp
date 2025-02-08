@@ -174,3 +174,20 @@ void Club::processErrorEvent(int time, const std::string &errorMsg) {
    oss << Time::ToString(time) << " 13 " << errorMsg;
    addOutputEvent(oss.str());
 }
+
+void Club::endOfDay() {
+    // For all occupied tables - compute time until closing.
+    for (auto &table : tables) {
+        if (table.occupied) {
+            freeTable(table.number - 1, closeTime);
+        }
+    }
+    // ID 11 in alphabetical order for seating + waiting clients.
+    std::vector<std::string> remainingClients(currentClients.begin(), currentClients.end());
+    std::sort(remainingClients.begin(), remainingClients.end());
+    for (const auto &client : remainingClients) {
+        std::ostringstream oss;
+        oss << Time::ToString(closeTime) << " 11 " << client;
+        addOutputEvent(oss.str());
+    }
+}
