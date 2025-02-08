@@ -1,5 +1,7 @@
 #include "Club.hpp"
 #include "Time.hpp"
+#include <sstream>
+#include <algorithm>
 
 
 Club::Club(int tablesCount, int openTime, int closeTime, int hourlyCost): tablesCount(tablesCount), openTime(openTime), closeTime(closeTime), hourlyCost(hourlyCost)
@@ -82,7 +84,36 @@ void Club::processEventID2(int time, const std::string& client, int tableNumber)
 }
 
 void Club::processEventID3(int time, const std::string& client){
+    std::string clientName = client;
+        if (currentClients.find(clientName) == currentClients.end()) {
+            processErrorEvent(time, "ClientUnknown");
+            return;
+        }
 
+        bool freeExists = false;
+        for (auto &table : tables) {
+            if (!table.occupied) {
+                freeExists = true;
+                break;
+            }
+        }
+        if (freeExists) {
+            processErrorEvent(time, "ICanWaitNoLonger!");
+            return;
+        }
+        // If client is not in waiting queue, add him.
+        if (std::find(waitingQueue.begin(), waitingQueue.end(), client) == waitingQueue.end())
+            waitingQueue.push_back(client);
+        // If number of waiting clients is greater than number of tables, client leaves immediately.
+        if (static_cast<int>(waitingQueue.size()) > tablesCount) {
+            // remove-erase idiom
+            waitingQueue.erase(std::remove(waitingQueue.begin(), waitingQueue.end(), client), waitingQueue.end());
+            currentClients.erase(client);
+            seatedClients.erase(client);
+            std::ostringstream oss;
+            oss << Time::ToString(time) << " 11 " << client;
+            addOutputEvent(oss.str());
+        }
 }
 
 void Club::processEventID4(int time, const std::string& client){

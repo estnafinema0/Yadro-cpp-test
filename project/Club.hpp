@@ -41,7 +41,7 @@ private:
     std::vector<Table> tables;
     std::set<std::string> currentClients;
     std::unordered_map<std::string, int> seatedClients;
-    std::set<std::string> WaitingQueue;
+    std::vector<std::string> waitingQueue;
     std::vector<std::string> outputEvents;
 
     // Add event to outputEvents vector of strings
