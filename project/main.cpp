@@ -26,8 +26,15 @@ int main(int argc, char* argv[]) {
     for (const auto &event : events) {
         club.processEvent(event);
     }
-    
-    club.endOfDay();
 
+    club.endOfDay();
+    // Now we have all the events processed and the output is ready.
+    const std::vector<std::string> &eventOutputs = club.getOutput();
+    for (const auto &line : eventOutputs) {
+        output.push_back(line);
+    }
+    output.push_back(club.getCloseTimeStr());
+
+    
     return 0;
 }
