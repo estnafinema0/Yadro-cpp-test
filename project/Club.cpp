@@ -88,8 +88,8 @@ void Club::processEventID2(int time, const std::string& client, int tableNumber)
 
 void Club::processEventID3(int time, const std::string& client){
     std::string clientName = client;
+//DO WE NEED TO CHECK IF THE CLIENT IS ALREADY IN THE CLUB?
 
-    
         // if (currentClients.find(clientName) == currentClients.end()) {
         //     processErrorEvent(time, "ClientUnknown");
         //     return;
