@@ -27,6 +27,9 @@ int Club::computeClientRevenue(int minutes) const{
 }
 
 void Club::processEvent(const EventData &event){
+
+    addOutputEvent(event.originalLine);
+
     if (event.eventId == 1){
         processEventID1(event.time, event.ClientName);
     }
@@ -44,7 +47,7 @@ void Club::processEvent(const EventData &event){
 void Club::processEventID1(int time, const std::string& client){
     std::string clientName = client;
     if (time < openTime || time > closeTime){
-        processErrorEvent(time, "Client arrived outside the opening hours");
+        processErrorEvent(time, "NotOpenYet");
         return;
     }
     if (currentClients.find(clientName) != currentClients.end()) {
@@ -85,10 +88,12 @@ void Club::processEventID2(int time, const std::string& client, int tableNumber)
 
 void Club::processEventID3(int time, const std::string& client){
     std::string clientName = client;
-        if (currentClients.find(clientName) == currentClients.end()) {
-            processErrorEvent(time, "ClientUnknown");
-            return;
-        }
+
+    
+        // if (currentClients.find(clientName) == currentClients.end()) {
+        //     processErrorEvent(time, "ClientUnknown");
+        //     return;
+        // }
 
         bool freeExists = false;
         for (auto &table : tables) {
@@ -138,8 +143,7 @@ void Club::freeTable(int tableIndex, int eventTime){
         int duration = eventTime - tables[tableIndex].startTime;
         if (duration < 0) duration = 0;
         tables[tableIndex].totalOccupied += duration;
-        int hours = computeClientRevenue(duration);
-        tables[tableIndex].revenue += hours * hourlyCost;
+        tables[tableIndex].revenue += computeClientRevenue(duration);
         std::string client = tables[tableIndex].currentClient;
         tables[tableIndex].occupied = false;
         tables[tableIndex].currentClient = "";
