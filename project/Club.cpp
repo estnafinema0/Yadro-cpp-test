@@ -117,5 +117,19 @@ void Club::processEventID3(int time, const std::string& client){
 }
 
 void Club::processEventID4(int time, const std::string& client){
-
+    std::string clientName = client;
+    if (currentClients.find(clientName) == currentClients.end()) {
+        processErrorEvent(time, "ClientUnknown");
+        return;
+    }
+    if (seatedClients.find(clientName) != seatedClients.end()) {
+        int tableNum = seatedClients[clientName];
+        int tableIndex = tableNum - 1;
+        freeTable(tableIndex, time);
+    }    
+    else {
+        waitingQueue.erase(std::remove(waitingQueue.begin(), waitingQueue.end(), clientName), waitingQueue.end());
+    }
+    currentClients.erase(clientName);
 }
+
