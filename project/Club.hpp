@@ -40,13 +40,24 @@ private:
     int hourlyCost;
     std::vector<Table> tables;
     std::set<std::string> currentClients;
-    std::unordered_map<std::string, int> clientsWithTables;
+    std::unordered_map<std::string, int> seatedClients;
     std::set<std::string> WaitingQueue;
     std::vector<std::string> outputEvents;
 
+    // Add event to outputEvents vector of strings
     void addOutputEvent(const std::string& event);
-
+    // Generate error event string with time and error message
+    void processErrorEvent(int time, const std::string& errorMsg);
+    // Compute client revenue based on minutes
     int computeClientRevenue(int minutes) const;
+
+    void freeTable(int tableIndex, int eventTime);
+
+
+    void processEventID1(int time, const std::string& client);
+    void processEventID2(int time, const std::string& client, const int tableNumber);
+    void processEventID3(int time, const std::string& client);
+    void processEventID4(int time, const std::string& client);
 };
 
 #endif
