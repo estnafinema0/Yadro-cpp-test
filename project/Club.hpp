@@ -2,6 +2,7 @@
 #define CLUB_HPP
 
 #include "Parser.hpp"
+#include <vector>
 
 struct Table {
     int number;              // id number of the Table   
@@ -16,7 +17,9 @@ struct Table {
 
 class Club {
 public:
-    Club(int tablesCount, int openTime, int closeTime, int hourlyCost);
+    Club(int tablesnum, int openTime, int closeTime, int hourlyCost);
+
+    
 private:
     int tablesCount;
     int openTime;
