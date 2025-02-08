@@ -49,8 +49,10 @@ private:
     void processErrorEvent(int time, const std::string& errorMsg);
     // Compute client revenue based on minutes
     int computeClientRevenue(int minutes) const;
-
+    // Free table and assign to waiting client
     void freeTable(int tableIndex, int eventTime);
+    // Assign table to waiting client
+    void assignTableToWaiting(int tableIndex, int eventTime);
 
     void processEventID1(int time, const std::string& client);
     void processEventID2(int time, const std::string& client, const int tableNumber);
