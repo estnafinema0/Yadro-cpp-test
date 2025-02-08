@@ -14,7 +14,8 @@ struct ClubConfig {
 struct EventData {
     int time;
     int eventId;
-    std::vector<std::string> params;
+    std::string ClientName;
+    int TableNumber;
     std::string originalLine;
 };
 

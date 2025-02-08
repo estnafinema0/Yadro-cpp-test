@@ -49,7 +49,7 @@ bool FileParser::Start(ClubConfig &config, std::vector<EventData> &events, std::
         if (line.empty())
             continue;
         EventData event;
-        if (!checkEventLine(line, event, errorLine))
+        if (!checkEventLine(line, event, config, errorLine))
             return false;
         events.push_back(event);
     }
