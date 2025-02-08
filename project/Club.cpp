@@ -168,3 +168,9 @@ void Club::assignTableToWaiting(int tableIndex, int eventTime) {
     oss << Time::ToString(eventTime) << " 12 " << client << " " << tables[tableIndex].number;
     addOutputEvent(oss.str());
 }
+
+void Club::processErrorEvent(int time, const std::string &errorMsg) {
+   std::ostringstream oss;
+   oss << Time::ToString(time) << " 13 " << errorMsg;
+   addOutputEvent(oss.str());
+}
