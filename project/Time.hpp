@@ -7,6 +7,8 @@
 #include <string_view>
 #include <cstdlib>
 
+
+namespace Yadro {
 namespace Time {
 
 inline std::optional<int> FromString(std::string_view timeStr) {
@@ -38,4 +40,5 @@ inline std::string ToString(int totalMinutes) {
     return oss.str();
 }
 
-};
+}
+}
