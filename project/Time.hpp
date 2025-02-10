@@ -31,6 +31,13 @@ namespace Time {
     }
 
     // Formats minutes in a string "HH:MM".
-    inline std::string ToString(int totalMinutes);
+    inline std::string ToString(int totalMinutes) {
+        int hours = totalMinutes / 60;
+        int minutes = totalMinutes % 60;
+        std::ostringstream oss;
+        oss << std::setw(2) << std::setfill('0') << hours << ":"
+            << std::setw(2) << std::setfill('0') << minutes;
+        return oss.str();
+    }
 
 } 
