@@ -14,8 +14,11 @@ using Yadro::Time::ToString;
 // Helper function to create an event (EventData)
 EventData createEvent(const std::string &timeStr, int id, const std::string &client, const int tableNumber = -1) {
     EventData event;
-    auto maybeTime = FromString(timeStr);
-    ASSERT_TRUE(maybeTime.has_value());  
+    auto maybeTime = FromString(timeStr); 
+    if (!maybeTime.has_value()) {
+        ADD_FAILURE() << "Time conversion failed for \"" << timeStr << "\"";
+        return EventData();
+    }
     event.time = maybeTime.value();
     event.eventId = id;
     event.ClientName = client;
