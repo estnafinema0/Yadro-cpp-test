@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Wextra -pthread -I../Yadro/project
 
-SRCS = parser_test.cpp ../../project/Parser.cpp ../../project/Time.cpp
+SRCS = parser_test.cpp ../../project/Parser.cpp 
 OBJS = $(SRCS:.cpp=.o)
 
 GTEST_LIBS = -lgtest -lgtest_main -pthread

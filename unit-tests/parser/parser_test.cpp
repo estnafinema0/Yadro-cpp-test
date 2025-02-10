@@ -4,6 +4,10 @@
 #include <cstdio>
 #include <string>
 
+using Yadro::Parser;
+using Yadro::ClubConfig;
+using Yadro::EventData;
+
 // Helper function to write content to a temporary file.
 bool writeToFile(const std::string &filename, const std::string &content) {
     std::ofstream ofs(filename);
@@ -30,11 +34,11 @@ TEST(ParserErrorTest, InsufficientConfigLines) {
     std::string content = "3\n09:00 19:00";  
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "Not enough configuration lines provided.\nMust be:\n<Number of Tables>\n<Opening Hours> <Closing Hours>\n<Hourly Cost>.");
     removeTempFile();
 }
@@ -44,11 +48,11 @@ TEST(ParserErrorTest, Config_FirstLine_MultipleTokens) {
     std::string content = "3 4\n09:00 19:00\n10";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "3 4");
     removeTempFile();
 }
@@ -58,11 +62,11 @@ TEST(ParserErrorTest, Config_FirstLine_NonInteger) {
     std::string content = "abc\n09:00 19:00\n10";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "abc");
     removeTempFile();
 }
@@ -72,11 +76,11 @@ TEST(ParserErrorTest, Config_FirstLine_NonPositive) {
     std::string content = "0\n09:00 19:00\n10";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "0");
     removeTempFile();
 }
@@ -86,11 +90,11 @@ TEST(ParserErrorTest, Config_SecondLine_OneToken) {
     std::string content = "3\n09:00\n10";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00");
     removeTempFile();
 }
@@ -100,11 +104,11 @@ TEST(ParserErrorTest, Config_SecondLine_ThreeTokens) {
     std::string content = "3\n09:00 19:00 extra\n10";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 19:00 extra");
     removeTempFile();
 }
@@ -114,11 +118,11 @@ TEST(ParserErrorTest, Config_SecondLine_InvalidTime_Open) {
     std::string content = "3\n9:00 19:00\n10";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "9:00 19:00");
     removeTempFile();
 }
@@ -128,11 +132,11 @@ TEST(ParserErrorTest, Config_SecondLine_InvalidTime_Close) {
     std::string content = "3\n09:00 19:60\n10";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 19:60");
     removeTempFile();
 }
@@ -142,11 +146,11 @@ TEST(ParserErrorTest, Config_SecondLine_OpenNotBeforeClose) {
     std::string content = "3\n19:00 09:00\n10";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "19:00 09:00");
     removeTempFile();
 }
@@ -156,11 +160,11 @@ TEST(ParserErrorTest, Config_ThirdLine_MultipleTokens) {
     std::string content = "3\n09:00 19:00\n10 20";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "10 20");
     removeTempFile();
 }
@@ -170,11 +174,11 @@ TEST(ParserErrorTest, Config_ThirdLine_NonInteger) {
     std::string content = "3\n09:00 19:00\nabc";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "abc");
     removeTempFile();
 }
@@ -184,11 +188,11 @@ TEST(ParserErrorTest, Config_ThirdLine_NonPositive) {
     std::string content = "3\n09:00 19:00\n0";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "0");
     removeTempFile();
 }
@@ -197,7 +201,6 @@ TEST(ParserErrorTest, Config_ThirdLine_NonPositive) {
 // Tests for event lines (from line 4)
 // *************************
 
-// For all event tests, use valid first 3 lines.
 const std::string validConfig = "3\n09:00 19:00\n10\n";
 
 // 13. Event: less than 2 tokens.
@@ -205,11 +208,11 @@ TEST(ParserErrorTest, EventLine_LessThanTwoTokens) {
     std::string content = validConfig + "09:00";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00");
     removeTempFile();
 }
@@ -219,11 +222,11 @@ TEST(ParserErrorTest, EventLine_InvalidTime) {
     std::string content = validConfig + "9:00 1 client";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "9:00 1 client");
     removeTempFile();
 }
@@ -233,11 +236,11 @@ TEST(ParserErrorTest, EventLine_InvalidEventId_NonInteger) {
     std::string content = validConfig + "09:00 abc client";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 abc client");
     removeTempFile();
 }
@@ -247,11 +250,11 @@ TEST(ParserErrorTest, EventLine_InvalidEventId_OutOfRange_Low) {
     std::string content = validConfig + "09:00 0 client";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 0 client");
     removeTempFile();
 }
@@ -261,11 +264,11 @@ TEST(ParserErrorTest, EventLine_InvalidEventId_OutOfRange_High) {
     std::string content = validConfig + "09:00 5 client";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
-    std::vector<EventData> events   ;
+    std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 5 client");
     removeTempFile();
 }
@@ -275,11 +278,11 @@ TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType1_TooFew) {
     std::string content = validConfig + "09:00 1";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 1");
     removeTempFile();
 }
@@ -289,11 +292,11 @@ TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType1_TooMany) {
     std::string content = validConfig + "09:00 1 client extra";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 1 client extra");
     removeTempFile();
 }
@@ -303,11 +306,11 @@ TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType2_TooFew) {
     std::string content = validConfig + "09:00 2 client";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 2 client");
     removeTempFile();
 }
@@ -317,11 +320,11 @@ TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType2_TooMany) {
     std::string content = validConfig + "09:00 2 client 1 extra";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 2 client 1 extra");
     removeTempFile();
 }
@@ -331,30 +334,28 @@ TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType2_WrongTableNumber) {
     std::string content = validConfig + "09:00 2 client not_a_number";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-     FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 2 client not_a_number");
     removeTempFile();
 }
-
 
 // 23. Event: table number is out of range.
 TEST(ParserErrorTest, EventLine_WrongTokenCount_EventType2_OutOfRange) {
     std::string content = validConfig + "09:00 2 client 99999";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-     FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_FALSE(parser.Start(config, events, errorLine));
+    EXPECT_FALSE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(errorLine, "09:00 2 client 99999");
     removeTempFile();
 }
-
 
 // *************************
 // Test for valid file content
@@ -372,17 +373,15 @@ TEST(ParserErrorTest, ValidFile) {
         "11:00 4 client1\n";
     ASSERT_TRUE(writeToFile(tempFileName, content));
 
-    FileParser parser(tempFileName);
+    Parser parser(tempFileName);
     ClubConfig config;
     std::vector<EventData> events;
     std::string errorLine;
-    EXPECT_TRUE(parser.Start(config, events, errorLine));
-    // Check if config is parsed correctly.
+    EXPECT_TRUE(parser.ExecuteLines(config, events, errorLine));
     EXPECT_EQ(config.numTables, 3);
     EXPECT_EQ(config.openTime, 9 * 60);
     EXPECT_EQ(config.closeTime, 19 * 60);
     EXPECT_EQ(config.hourlyCost, 10);
-    // There should be 5 events.
     EXPECT_EQ(events.size(), 5);
     removeTempFile();
 }
