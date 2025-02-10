@@ -35,7 +35,7 @@ namespace Time {
     return static_cast<int>(hours * 60 + minutes);
 }
 
-    std::string ToString(int totalMinutes) {
+    inline std::string ToString(int totalMinutes) {
         int hours = totalMinutes / 60;
         int minutes = totalMinutes % 60;
         std::ostringstream oss;
