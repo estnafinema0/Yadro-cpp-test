@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "Parser.hpp"
-#include "HelpFuncs.hpp"
+#include "Utils.hpp"
 #include "Time.hpp"
 
 // Check if line is valid table count line and save it to config
