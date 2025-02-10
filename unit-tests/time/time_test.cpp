@@ -1,116 +1,98 @@
 #include <gtest/gtest.h>
 #include "../../project/Time.hpp"
+#include <optional>
+
+using Yadro::Time::FromString;
+using Yadro::Time::ToString;
 
 TEST(ParseTimeTest, ValidTimes_LowestBoundary) {
-    bool success = false;
-    int minutes = Time::FromString("00:00", success);
-    EXPECT_TRUE(success);
+    auto maybeMinutes = FromString("00:00");
+    EXPECT_TRUE(maybeMinutes.has_value());
+    int minutes = maybeMinutes.value();
     EXPECT_EQ(minutes, 0);
 }
 
 TEST(ParseTimeTest, ValidTimes_HighestBoundary) {
-    bool success = false;
-    int minutes = Time::FromString("23:59", success);
-    EXPECT_TRUE(success);
+    auto maybeMinutes = FromString("23:59");
+    EXPECT_TRUE(maybeMinutes.has_value());
+    int minutes = maybeMinutes.value();
     EXPECT_EQ(minutes, 23 * 60 + 59);
 }
 
 TEST(ParseTimeTest, ValidTimes_MidRange) {
-    bool success = false;
-    int minutes = Time::FromString("12:34", success);
-    EXPECT_TRUE(success);
+    auto maybeMinutes = FromString("12:34");
+    EXPECT_TRUE(maybeMinutes.has_value());
+    int minutes = maybeMinutes.value();
     EXPECT_EQ(minutes, 12 * 60 + 34);
 }
 
 TEST(ParseTimeTest, InvalidFormat_NegativeHours1) {
-    bool success = false;
-    int minutes = Time::FromString("-23:00", success); 
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("-23:00");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidFormat_NegativeHours2) {
-    bool success = false;
-    int minutes = Time::FromString("-23:00", success); 
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("-23:00");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidFormat_LengthLessThan5) {
-    bool success = false;
-    int minutes = Time::FromString("9:00", success); 
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("9:00");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidFormat_LengthMoreThan5) {
-    bool success = false;
-    int minutes = Time::FromString("09:000", success);
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("09:000");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidFormat_NoColonAtPosition2) {
-    bool success = false;
-    int minutes = Time::FromString("12-34", success);
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("12-34");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidNumeric_HoursNotNumeric) {
-    bool success = false;
-    int minutes = Time::FromString("ab:15", success);
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("ab:15");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidNumeric_MinutesNotNumeric) {
-    bool success = false;
-    int minutes = Time::FromString("12:xx", success);
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("12:xx");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidRange_HoursTooHigh) {
-    bool success = false;
-    int minutes = Time::FromString("24:00", success);
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("24:00");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidRange_HoursNegative) {
-    bool success = false;
-    int minutes = Time::FromString("-1:30", success);
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("-1:30");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidRange_MinutesTooHigh) {
-    bool success = false;
-    int minutes = Time::FromString("23:60", success);
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("23:60");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(ParseTimeTest, InvalidRange_MinutesNegative) {
-    bool success = false;
-    int minutes = Time::FromString("14:-1", success);
-    EXPECT_FALSE(success);
-    EXPECT_EQ(minutes, 0);
+    auto maybeMinutes = FromString("14:-1");
+    EXPECT_FALSE(maybeMinutes.has_value());
 }
 
 TEST(FormatTimeTest, FormatZeroMinutes) {
-    std::string formatted = Time::ToString(0);
+    std::string formatted = ToString(0);
     EXPECT_EQ(formatted, "00:00");
 }
 
 TEST(FormatTimeTest, FormatNormalTime) {
-    std::string formatted = Time::ToString(12 * 60 + 34);
+    std::string formatted = ToString(12 * 60 + 34);
     EXPECT_EQ(formatted, "12:34");
 }
 
 TEST(FormatTimeTest, FormatBoundary) {
-    std::string formatted = Time::ToString(23 * 60 + 59);
+    std::string formatted = ToString(23 * 60 + 59);
     EXPECT_EQ(formatted, "23:59");
 }
 
