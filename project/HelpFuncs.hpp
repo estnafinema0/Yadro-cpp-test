@@ -1,14 +1,15 @@
-#ifndef HELPFORCHECKER_HPP
-#define HELPFORCHECKER_HPP
+#pragma once
 
 #include <string>
 #include <vector>
 #include <sstream>
 
-std::vector<std::string> mysplit(const std::string &s)
-{
+namespace Yadro {
+namespace Util {
+    
+std::vector<std::string> splitString(const std::string &str) {
     // split string for tokens by spaces
-    std::istringstream iss(s);
+    std::istringstream iss(str);
     std::vector<std::string> tokens;
     std::string token;
     while (iss >> token)
@@ -29,4 +30,5 @@ bool IntFromString(const std::string &s, int &value) {
     return true;
 }
 
-#endif
+}
+}
