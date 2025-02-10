@@ -1,58 +1,56 @@
 #include "Parser.hpp"
 #include "Time.hpp"
-#include "CheckConfigLines.hpp"
+#include "ParserHelpers.hpp"
+#include <fstream>
 
-bool FileParser::readLines(const std::string &filename, std::string &errorLine) {
-    FILE *file = std::fopen(filename.c_str(), "r");
-    if (!file) {
+namespace Yadro {
+
+bool Parser::readLines(const std::string &filename, std::string &errorLine) {
+    std::ifstream fileStream(filename);
+    if (!fileStream) {
         errorLine = "Error: Cannot open file " + filename;
         return false;
     }
-    
-    char buffer[4096];
-
-    while (std::fgets(buffer, sizeof(buffer), file)) {
-        std::string line(buffer);
-        while (!line.empty() && (line.back() == '\n')) {
+    std::string line;
+    while (std::getline(fileStream, line)) {
+        while (!line.empty() && (line.back() == '\r'))
             line.pop_back();
-        }
-        lines.push_back(line);
+        m_lines.push_back(line);
     }
-    
-    std::fclose(file);
     return true;
 }
 
-FileParser::FileParser(const std::string &filename) {
+Parser::Parser(const std::string &filename) {
     std::string err;
     if (!readLines(filename, err)) {
-        lines.push_back(err);
+        m_lines.push_back(err);
     }
 }
 
-bool FileParser::Start(ClubConfig &config, std::vector<EventData> &events, std::string & errorLine) {
+bool Parser::ExecuteLines   (ClubConfig &config, std::vector<EventData> &events, std::string & errorLine) {
     int lineNum = 0;
-    if (lines.size() < 3){
+    if (m_lines.size() < 3) {
         errorLine = "Not enough configuration lines provided.\nMust be:\n<Number of Tables>\n<Opening Hours> <Closing Hours>\n<Hourly Cost>.";
         return false;
     }
 
-    if (!checkTableCount(lines[lineNum++], config, errorLine))
+    if (!parseTableCount(m_lines[lineNum++], config, errorLine))
         return false;
-    if (!checkOperatingHours(lines[lineNum++], config, errorLine))
+    if (!parseOperatingHours(m_lines[lineNum++], config, errorLine))
         return false;
-    if (!checkHourlyCost(lines[lineNum++], config, errorLine))
+    if (!parseHourlyCost(m_lines[lineNum++], config, errorLine))
         return false;
 
-    for (; lineNum < static_cast<int>(lines.size()); lineNum++) {
-        std::string line = lines[lineNum];
+    for (; lineNum < static_cast<int>(m_lines.size()); lineNum++) {
+        std::string line = m_lines[lineNum];
         if (line.empty())
             continue;
         EventData event;
-        if (!checkEventLine(line, event, config, errorLine))
+        if (!parseEvent(line, event, config, errorLine))
             return false;
         events.push_back(event);
     }
-    
     return true;
+}
+
 }

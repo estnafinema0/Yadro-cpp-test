@@ -1,6 +1,8 @@
 #include "Club.hpp"
 #include "Parser.hpp"
 #include <iostream>
+#include <vector>
+#include <string>
 
 using namespace Yadro;
 
