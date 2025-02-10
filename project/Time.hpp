@@ -1,5 +1,4 @@
-#ifndef TIME_HPP
-#define TIME_HPP
+#pragma once
 
 #include <string>
 #include <iomanip>
@@ -40,5 +39,3 @@ inline std::string ToString(int totalMinutes) {
 }
 
 };
-
-#endif
