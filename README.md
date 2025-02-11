@@ -11,8 +11,8 @@ This is a C++ object-oriented simulation of a computer club management system. T
   - [Overview](#overview)
   - [Setup and Build](#setup-and-build)
     - [Install Prerequisites](#install-prerequisites)
-    - [Build Main Application](#build-main-application)
-  - [Run the Application](#run-the-application)
+    - [Build](#build)
+  - [Run](#run)
   - [Testing](#testing)
     - [Unit Tests](#unit-tests)
     - [Integration Tests](#integration-tests)
@@ -58,7 +58,7 @@ sudo make
 sudo cp lib/*.a /usr/lib
 ```
 
-### Build Main Application
+### Build
 
 In the `Yadro/project` folder, run:
 ```bash
@@ -73,7 +73,7 @@ make clean
 
 ---
 
-## Run the Application
+## Run
 
 You can run the main application from the `Yadro/project/` directory.  
 The application requires a single argument: the input file (a test file with club instructions):
