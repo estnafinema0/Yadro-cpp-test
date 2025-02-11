@@ -1,143 +1,85 @@
-# Yadro Computer Club Management System
+# Computer Club Management System
 
-Yadro is a command-line based simulation of a computer club management system. The project handles client arrivals, seating assignments, waiting queue management, departure events, error handling, and revenue reporting. It is designed using modern C++ (up to C++20) and leverages standard library features (including `std::optional` and `std::string_view`) to ensure robust input parsing and error handling.
+This is a C++ object-oriented simulation of a computer club management system. The project is organized into clear modules that handle different parts of the system. The project includes unit tests for each module (using Google Test) as well as integration tests.
 
 ---
 
 ## Table of Contents
 
-- [Yadro Computer Club Management System](#yadro-computer-club-management-system)
+- [Computer Club Management System](#computer-club-management-system)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
-  - [Features](#features)
-  - [Project Structure](#project-structure)
-  - [Environment Setup and Build Instructions](#environment-setup-and-build-instructions)
-  - [Running the Application](#running-the-application)
+  - [Setup and Build](#setup-and-build)
+    - [Install Prerequisites](#install-prerequisites)
+    - [Build Main Application](#build-main-application)
+  - [Run the Application](#run-the-application)
   - [Testing](#testing)
     - [Unit Tests](#unit-tests)
-      - [How to Run Unit Tests](#how-to-run-unit-tests)
     - [Integration Tests](#integration-tests)
-      - [Running Integration Tests](#running-integration-tests)
-  - [Global Project Features and Design Details](#global-project-features-and-design-details)
   - [Usage Example](#usage-example)
-  - [Dependencies](#dependencies)
-  - [Debugging and Configuration](#debugging-and-configuration)
-  - [License](#license)
 
 ---
 
 ## Overview
 
-The Yadro Computer Club Management System is designed to simulate the operations of a computer club. It processes a text file containing a club configuration and a sequence of events (client arrivals, seating, waiting, departures), applies business rules (e.g., not allowing a client to wait when tables are free, automatically seating waiting clients when a table is freed), and generates a detailed report including error events and revenue summaries for each table.
+A full description is available in Russian in the root directory as [Original_task.pdf](Yadro/Original_task.pdf).
 
-Key components include:
+The project features a clear modular structure. Each module has its own unit tests (written with Google Test). Integration tests for the whole project are also provided and include a bash script for automated execution.
+
+The program processes a text file containing a club configuration and a sequence of events (client arrivals, seating, waiting, departures), applies business rules (such as not allowing a client to wait when tables are free and automatically seating waiting clients when a table is freed), and generates a detailed report that includes error events and revenue summaries for each table.
+
+Key modules include:
 
 - **Parser Module:** Reads and validates input from a text file.
-- **Time Module:** Converts between string representations (in the format "HH:MM") and integer minute counts using `std::optional` for error handling.
-- **Club Module:** Implements business logic for client management, seating, waiting, error reporting, and revenue calculation.
-- **Main:** Orchestrates the parsing and processing of events and outputs a final report.
+- **Time Module:** Converts string representations (in the format "HH:MM") into integer minutes (using `std::optional` for error handling).
+- **Club Module:** Implements the club's business logic for client management, seating, waiting, error reporting, and revenue calculation.
+- **Main:** Lauches the parsing and processing of events and outputs a final report.
+- **Unit Tests:** Written for [each module](Yadro/unit-tests) using Google Test.
+- **Integration Tests:** Five input and expected output files are located in the [tests folder](Yadro/tests), with a bash script for automated execution.
 
 ---
 
-## Features
+## Setup and Build
 
-- **Input Parsing:**  
-  - Reads configuration (number of tables, opening and closing times, hourly cost) and event lines.
-  - Uses robust parsing routines with error handling via `std::optional`.
-  
-- **Client Management:**  
-  - Processes client arrival (ID 1), seating (ID 2), waiting (ID 3), and departure (ID 4) events.
-  - Generates error events (ID 13) for invalid operations (e.g., arriving outside of working hours, trying to sit at a busy table, etc.).
-  - Handles automatic re-seating of waiting clients when a table is freed—except during end-of-day processing.
+### Install Prerequisites
 
-- **Revenue Reporting:**  
-  - Calculates revenue per table based on rounded-up client usage time.
-  - Outputs a final report showing table occupancy durations and revenues.
+The project is designed for a C++20 compiler. For testing, GNU Make and Google Test are also required.
 
-- **Test-Driven Development:**  
-  - Comprehensive unit tests for individual modules (Time, Parser, Club) are provided.
-  - Integration tests (input/output files) and a test script ensure end-to-end correctness.
-
-- **Modern C++ Practices:**  
-  - Uses `std::optional` for error-prone conversions.
-  - Leverages `std::string_view` for efficient parsing.
-  - Organizes code within the `Yadro` namespace.
-
----
-
-## Project Structure
-
+To install Google Test, run:
+```bash
+sudo apt update
+sudo apt install libgtest-dev
 ```
-Yadro/
-├── project/
-│   ├── Club.hpp            # Club module interface
-│   ├── Club.cpp            # Club module implementation
-│   ├── Parser.hpp          # Parser interface
-│   ├── Parser.cpp          # Parser implementation
-│   ├── ParserHelpers.hpp   # Parsing helper functions
-│   ├── Time.hpp            # Time conversion functions (in Yadro::Time namespace)
-│   ├── Time.cpp            # (Optional) Implementation file (all functions are inline)
-│   ├── Utils.hpp           # Utility functions in Yadro::Util namespace
-│   ├── main.cpp            # Main application entry point
-│   └── Makefile            # Build instructions for the project
-├── tests/
-│   ├── inputs/             # Integration test input files (*.in.txt)
-│   │   ├── test1.in.txt
-│   │   ├── test2.in.txt
-│   │   ├── test3.in.txt
-│   │   ├── test4.in.txt
-│   │   └── test5.in.txt
-│   ├── outputs/            # Expected output files (*.out.txt)
-│   │   ├── test1.out.txt
-│   │   ├── test2.out.txt
-│   │   ├── test3.out.txt
-│   │   ├── test4.out.txt
-│   │   └── test5.out.txt
-│   └── test_script.sh      # Shell script to run integration tests
-└── unit-tests/
-    ├── club/               # Unit tests for the Club module
-    │   ├── club_test.cpp
-    │   └── Makefile
-    ├── parser/             # Unit tests for the Parser module
-    │   ├── parser_test.cpp
-    │   └── Makefile
-    └── time/               # Unit tests for the Time module
-        ├── time_test.cpp
-        └── Makefile
+Then build and install the libraries:
+```bash
+cd /usr/src/gtest
+sudo cmake .
+sudo make
+sudo cp lib/*.a /usr/lib
+```
+
+### Build Main Application
+
+In the `Yadro/project` folder, run:
+```bash
+make
+```
+This command compiles the project and produces an executable named `main`.
+
+To clean all object files, run:
+```bash
+make clean
 ```
 
 ---
 
-## Environment Setup and Build Instructions
+## Run the Application
 
-1. **Prerequisites:**
-   - A C++20-compatible compiler (e.g., GCC 10+ or Clang 10+).
-   - GNU Make.
-   - For unit testing, [GoogleTest](https://github.com/google/googletest) is required (the Makefiles for unit tests link against `-lgtest -lgtest_main`).
-
-2. **Building the Main Application:**
-   - Navigate to the `Yadro/project/` directory.
-   - Run:
-     ```bash
-     make
-     ```
-   - This command compiles the project and produces an executable named `main`.
-
-3. **Making Test Scripts Executable:**
-   - Navigate to the `Yadro/tests/` directory.
-   - Run:
-     ```bash
-     chmod +x test_script.sh
-     ```
-
----
-
-## Running the Application
-
-Once built, you can run the main application from the `Yadro/project/` directory. The application expects a single argument specifying the input file:
+You can run the main application from the `Yadro/project/` directory.  
+The application requires a single argument: the input file (a test file with club instructions):
 
 ```bash
-./main path/to/your/input_file.txt
+./main input_file.txt
 ```
 
 For example, to run an integration test:
@@ -153,56 +95,38 @@ The output will be printed to the console.
 
 ### Unit Tests
 
-Unit tests are organized into three groups:
-- **Time Module:** Located in `Yadro/unit-tests/time/`
-  - Tests (`time_test.cpp`) validate correct parsing and formatting of time strings.
-- **Parser Module:** Located in `Yadro/unit-tests/parser/`
-  - Tests (`parser_test.cpp`) ensure that configuration lines and event lines are parsed correctly and that errors are detected as specified.
-- **Club Module:** Located in `Yadro/unit-tests/club/`
-  - Tests (`club_test.cpp`) cover business logic for client management, seating, waiting queue handling, and end-of-day processing.
-  
-#### How to Run Unit Tests
-1. Navigate to each unit test directory (e.g., `Yadro/unit-tests/club/`).
-2. Run:
-   ```bash
-   make
-   ./run_tests
-   ```
-3. Repeat for the other modules (`parser` and `time`).
+Unit tests are organized into three groups `Yadro/unit-tests/time/`, `Yadro/unit-tests/parser/`, `Yadro/unit-tests/club/` for one module each.
+
+1. **Time tests** validate correct parsing and formatting of time strings.
+2. **Parser tests** checks that configuration lines and event lines are parsed correctly and that errors are detected as specified. If any errors detected the program stops (see the instruction). 
+3. **Club tests** do the business logic for client management, seating, waiting queue handling, and end-of-day processing.
+
+
+Choose the module to check and in the chosen folder (`club`, `parser` and `time`) run:
+
+```bash
+make
+./run_tests
+```
 
 ### Integration Tests
 
-Integration tests use input/output file pairs located in the `Yadro/tests/inputs/` and `Yadro/tests/outputs/` directories.
+The script iterates over all input files, runs the application, and compares the produced output with the expected output. Differences (if any happened) are displayed in the termanal.
 
-#### Running Integration Tests
-1. Navigate to the `Yadro/tests/` directory.
-2. Run the test script:
-   ```bash
-   ./test_script.sh
-   ```
-3. The script iterates over all input files, runs the application, and compares the produced output with the expected output. Differences (if any) are displayed.
-
----
-
-## Global Project Features and Design Details
-
-- **Robust Parsing:**  
-  The project uses modern C++ features such as `std::optional` and `std::string_view` to robustly parse and validate time strings and integer values. Invalid formats are handled gracefully with clear error messages.
-
-- **Business Logic:**  
-  The `Club` module implements all business rules regarding client arrivals, seating, waiting, departure, and end-of-day processing. Special events (such as error events with ID 13 and automatic departure events with ID 11) are generated as per the requirements.
-
-- **Separation of Concerns:**  
-  Parsing logic is separated into dedicated helper modules (`ParserHelpers.hpp` and `Utils.hpp`), and all code is organized under the `Yadro` namespace to avoid global namespace pollution.
-
-- **Testing Infrastructure:**  
-  Both unit tests and integration tests are provided to ensure that each module works as intended and that the entire system meets the specification. A Bash script automates the integration testing process.
+To make test script executable in the `Yadro/tests/` folder, run: 
+```bash
+chmod +x test_script.sh
+```
+Run the test script:
+```bash
+./test_script.sh
+```
 
 ---
 
 ## Usage Example
 
-Assume you have an input file `test1.in.txt` with the following content:
+Example of test file 1 (`test1.in.txt`):
 ```
 3
 09:00 19:00
@@ -228,7 +152,7 @@ When you run:
 ./main test1.in.txt
 ```
 
-The application will output (for example):
+You will see the following output in the terminal:
 ```
 09:00
 08:48 1 client1
@@ -256,35 +180,8 @@ The application will output (for example):
 3 90 08:01
 ```
 
-This output includes the opening time, all processed events (including error events), the closing time, and a final report of table usage and revenue.
-
 ---
 
-## Dependencies
-
-- **Compiler:** A modern C++ compiler supporting C++20 (e.g., GCC 10+, Clang 10+).
-- **GoogleTest:** Required for unit testing (installed via your package manager or built from source).
-- **Make:** GNU Make is used for building both the project and the tests.
-
-No external libraries are used in the main project code (only the standard C++ library).
+Thanks for checking!
 
 ---
-
-## Debugging and Configuration
-
-- **Logging and Output:**  
-  All events processed by the system are logged to the console as specified.  
-- **Configuration File:**  
-  The application accepts a single input file containing configuration parameters and events.  
-- **Modifying Build Options:**  
-  To adjust compiler flags or build settings, edit the `Makefile` located in the `Yadro/project/` directory.
-
----
-
-## License
-
-*(Include your license information here.)*
-
----
-
-This README provides a comprehensive guide for developers and users of the Yadro Computer Club Management System, ensuring that even newcomers can easily understand how to build, test, and use the project.
