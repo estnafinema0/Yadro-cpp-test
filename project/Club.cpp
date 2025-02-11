@@ -8,7 +8,7 @@ namespace Yadro {
 Club::Club(int tablesnum, int openTime, int closeTime, int hourlyCost)
     : m_tablesCount(tablesnum), m_openTime(openTime), m_closeTime(closeTime), m_hourlyCost(hourlyCost) {
     for (int i = 1; i <= m_tablesCount; i++)
-        m_tables.push_back(Table(i));
+        m_tables.push_back(static_cast<Table>(i));
 }
 
 std::string Club::getOpenTimeStr() const {
