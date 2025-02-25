@@ -27,7 +27,7 @@ Parser::Parser(const std::string &filename) {
     }
 }
 
-bool Parser::ExecuteLines   (ClubConfig &config, std::vector<EventData> &events, std::string & errorLine) {
+bool Parser::ExecuteLines(ClubConfig &config, std::vector<EventData> &events, std::string & errorLine) {
     int lineNum = 0;
     if (m_lines.size() < 3) {
         errorLine = "Not enough configuration lines provided.\nMust be:\n<Number of Tables>\n<Opening Hours> <Closing Hours>\n<Hourly Cost>.";
